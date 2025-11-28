@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Header from '@/components/Header';
+import Header from '@/components/Header'; 
 import HistoryChart from '@/components/HistoryChart';
 import { todayData, yesterdayData, mockHistoryData, generateHighlights, getBoosterMessage } from '@/lib/data';
 import { generateInsights, analyzeWeeklyPattern } from '@/lib/gemini';
