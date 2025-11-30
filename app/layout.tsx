@@ -17,16 +17,15 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         {/* 온글잎 박다현체 폰트 */}
         <link rel="preconnect" href="https://fastly.jsdelivr.net" />
-      <style dangerouslySetInnerHTML={{__html: `
+<style dangerouslySetInnerHTML={{__html: `
   @font-face {
-    font-family: 'Ownglyph_ParkDaHyun';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2407-2@1.0/Ownglyph_ParkDaHyun.woff2') format('woff2');
+    font-family: 'ParkDaHyun';
+    src: url('/fonts/ParkDaHyun.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
-    font-display: swap;
   }
   * {
-    font-family: 'Ownglyph_ParkDaHyun', 'Malgun Gothic', sans-serif !important;
+    font-family: 'ParkDaHyun', 'Malgun Gothic', sans-serif !important;
   }
 `}} />
 
