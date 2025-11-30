@@ -73,7 +73,19 @@ export default function Dashboard() {
     ddi: 10
   });
 
-  const scores = todayData.scores;
+  // 기본 데이터 (todayData가 없을 경우 대비)
+  const defaultData = {
+    scores: {
+      ohasa: 75.2,
+      star: 70.2,
+      saju: 80.2,
+      ddi: 73.2
+    },
+    luckyTime: '19시 - 21시',
+    luckyColor: '파란색'
+  };
+
+  const scores = todayData?.scores || defaultData.scores;
   
   const calculateWeightedAvg = (s: typeof scores, w: typeof weights) => {
     return Number((
@@ -82,7 +94,7 @@ export default function Dashboard() {
   };
   
   const avgScore = calculateWeightedAvg(scores, weights);
-  const yesterdayAvg = calculateWeightedAvg(yesterdayData.scores, weights);
+  const yesterdayAvg = calculateWeightedAvg(yesterdayData?.scores || defaultData.scores, weights);
   const scoreDiff = Number((avgScore - yesterdayAvg).toFixed(1));
   
   const highlights = generateHighlights(scores);
