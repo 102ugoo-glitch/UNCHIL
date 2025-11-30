@@ -54,13 +54,14 @@ export function getAnimalSign(year: number): string {
 }
 
 // 정확한 일주 계산 - 1999년 10월 7일 = 임진일주 기준
+// 60갑자: 갑자(0), 을축(1)... 임진(28)...
 export function calculateIlju(year: number, month: number, day: number): string {
   const knownDate = new Date(1999, 9, 7); // 1999.10.7 = 임진
-  const knownGapja = 28; // 임(8) + 진(4) in 60갑자
+  const knownGapja = 28; // 임진 = 28번째
   
   const targetDate = new Date(year, month - 1, day);
   const diffTime = targetDate.getTime() - knownDate.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
   
   let gapjaIndex = (knownGapja + diffDays) % 60;
   if (gapjaIndex < 0) gapjaIndex += 60;

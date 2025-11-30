@@ -19,13 +19,13 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fastly.jsdelivr.net" />
 <style dangerouslySetInnerHTML={{__html: `
   @font-face {
-    font-family: 'ParkDaHyun';
+    font-family: 'Ownglyph_ParkDaHyun';
     src: url('/fonts/ParkDaHyun.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
   }
   * {
-    font-family: 'ParkDaHyun', 'Malgun Gothic', sans-serif !important;
+    font-family: 'Ownglyph_ParkDaHyun', sans-serif !important;
   }
 `}} />
 
