@@ -58,23 +58,3 @@ export default function Settings() {
     </div>
   );
 }
-```
-
----
-
-## 🎯 순서
-
-1. **app/dashboard/page.tsx 파일 있는지 확인**
-2. **없으면 만들기**
-3. **app/settings/page.tsx도 확인**
-4. **없으면 만들기**
-5. **Vercel 자동 재배포 대기**
-6. **Visit!**
-
----
-
-**먼저 확인부터!**
-
-app/dashboard/page.tsx 주소 브라우저에 입력해봐:
-```
-https://github.com/102ugoo-glitch/UNCHIL/blob/main/app/dashboard/page.tsx
