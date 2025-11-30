@@ -1,0 +1,291 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* 배경: 젤리처럼 부드러운 파스텔 블루톤 그라데이션 적용 */
+  body {
+    @apply bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-100;
+    @apply text-gray-800;
+    @apply font-sans;
+  }
+  
+  /* 모바일 최적화: 스크롤 부드럽게 */
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* 모바일에서 텍스트 선택 방지 (선택사항) */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* 젤리 카드 효과 (대시보드 메인 컴포넌트) */
+.jelly-card {
+  @apply bg-white/95 backdrop-blur-sm rounded-3xl shadow-lg border border-blue-100;
+  @apply transition-all duration-300 hover:shadow-2xl hover:shadow-blue-300/70 hover:-translate-y-1;
+}
+
+/* 귀여운 버튼 효과 (btn-cute) */
+.btn-cute {
+  @apply bg-gradient-to-r from-sky-400 to-indigo-500;
+  @apply hover:from-sky-500 hover:to-indigo-600;
+  @apply text-white font-extrabold py-3 px-6 rounded-full;
+  @apply transition-all transform hover:scale-[1.02] active:scale-95;
+  @apply shadow-xl shadow-blue-300/50 hover:shadow-2xl hover:shadow-blue-400/70;
+  /* 모바일 터치 최적화 */
+  @apply select-none;
+}
+
+/* 세컨더리 버튼 (부드러운 파스텔 블루) */
+.btn-secondary {
+  @apply bg-gradient-to-r from-blue-200 to-cyan-200;
+  @apply hover:from-blue-300 hover:to-cyan-300;
+  @apply text-blue-900 font-bold py-3 px-6 rounded-full;
+  @apply transition-all transform hover:scale-[1.02];
+  @apply shadow-lg shadow-blue-200/50 hover:shadow-xl hover:shadow-blue-300/60;
+  @apply select-none;
+}
+
+/* 귀여운 카드 (card-cute - 홈 화면 등) */
+.card-cute {
+  @apply bg-white/90 backdrop-blur-md rounded-[2rem] shadow-2xl shadow-blue-200/60;
+  @apply border-2 border-blue-100;
+  @apply transition-all hover:shadow-2xl hover:shadow-blue-300/70 hover:-translate-y-2;
+}
+
+/* 특별한 강조 카드 */
+.card-highlight {
+  @apply bg-gradient-to-br from-blue-50 to-sky-100 rounded-[2rem];
+  @apply shadow-2xl shadow-indigo-200/50 border-2 border-sky-200;
+  @apply transition-all hover:shadow-xl hover:-translate-y-1;
+}
+
+/* 귀여운 입력창 (input-cute) */
+.input-cute {
+  @apply bg-sky-50/50 border-2 border-blue-200;
+  @apply text-gray-700 rounded-2xl;
+  @apply focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-300/50;
+  @apply px-4 py-3;
+  @apply transition-all placeholder:text-blue-300;
+  /* 모바일 입력 최적화 */
+  font-size: 16px; /* iOS 자동 줌 방지 */
+}
+
+/* 텍스트영역도 동일한 스타일 */
+.textarea-cute {
+  @apply bg-sky-50/50 border-2 border-blue-200;
+  @apply text-gray-700 rounded-2xl;
+  @apply focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-300/50;
+  @apply px-4 py-3;
+  @apply transition-all placeholder:text-blue-300 resize-none;
+  font-size: 16px; /* iOS 자동 줌 방지 */
+}
+
+/* 귀여운 배지/태그 */
+.badge-cute {
+  @apply inline-block bg-gradient-to-r from-sky-200 to-blue-300;
+  @apply text-blue-900 text-xs font-bold px-3 py-1 rounded-full;
+  @apply shadow-md shadow-blue-200/50;
+}
+
+/* 귀여운 스크롤바 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to bottom, #e0f2fe, #dbeafe);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #7dd3fc, #93c5fd);
+  border-radius: 10px;
+  border: 2px solid #e0f2fe;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #38bdf8, #60a5fa);
+}
+
+/* 귀여운 애니메이션 */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2) rotate(180deg);
+  }
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes bubble {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-sparkle {
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+.animate-wave {
+  animation: wave 2s ease-in-out infinite;
+}
+
+.animate-bubble {
+  animation: bubble 4s ease-in-out infinite;
+}
+
+/* 글래스모피즘 효과 (블루 버전) */
+.glass-blue {
+  @apply bg-white/30 backdrop-blur-lg;
+  @apply border border-white/40;
+  @apply shadow-xl shadow-blue-200/30;
+}
+
+/* 구름 효과 카드 */
+.cloud-card {
+  @apply bg-gradient-to-br from-white via-sky-50 to-blue-100;
+  @apply rounded-[2.5rem] shadow-2xl shadow-sky-300/40;
+  @apply border-4 border-white;
+  @apply transition-all hover:shadow-blue-400/50 hover:scale-[1.01];
+}
+
+/* 아이콘 홀더 (블루 그라데이션) */
+.icon-holder {
+  @apply bg-gradient-to-br from-sky-400 to-indigo-500;
+  @apply text-white rounded-2xl p-3;
+  @apply shadow-lg shadow-blue-300/50;
+  @apply inline-flex items-center justify-center;
+}
+
+/* 알림/경고 스타일 */
+.alert-info {
+  @apply bg-sky-100 border-l-4 border-sky-500;
+  @apply text-sky-900 p-4 rounded-r-2xl;
+  @apply shadow-md shadow-sky-200/50;
+}
+
+.alert-success {
+  @apply bg-emerald-100 border-l-4 border-emerald-500;
+  @apply text-emerald-900 p-4 rounded-r-2xl;
+  @apply shadow-md shadow-emerald-200/50;
+}
+
+/* 호버시 반짝이는 효과 */
+.shine-effect {
+  @apply relative overflow-hidden;
+}
+
+.shine-effect::before {
+  content: '';
+  @apply absolute inset-0;
+  @apply bg-gradient-to-r from-transparent via-white/20 to-transparent;
+  @apply -translate-x-full;
+  @apply transition-transform duration-700;
+}
+
+.shine-effect:hover::before {
+  @apply translate-x-full;
+}
+
+/* 물방울 효과 */
+.water-drop {
+  @apply bg-gradient-to-br from-sky-200 to-blue-300;
+  @apply rounded-full shadow-lg shadow-blue-300/60;
+  @apply inline-block;
+}
+
+/* 귀여운 체크박스 스타일 */
+.checkbox-cute {
+  @apply appearance-none w-6 h-6 border-2 border-blue-300 rounded-lg;
+  @apply checked:bg-gradient-to-r checked:from-sky-400 checked:to-blue-500;
+  @apply checked:border-transparent;
+  @apply transition-all cursor-pointer;
+  @apply shadow-md hover:shadow-lg;
+}
+
+/* 귀여운 라디오 버튼 */
+.radio-cute {
+  @apply appearance-none w-6 h-6 border-2 border-blue-300 rounded-full;
+  @apply checked:bg-gradient-to-r checked:from-sky-400 checked:to-blue-500;
+  @apply checked:border-transparent;
+  @apply transition-all cursor-pointer;
+  @apply shadow-md hover:shadow-lg;
+}
+
+/* 로딩 스피너 */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner {
+  @apply w-12 h-12 border-4 border-blue-200 border-t-sky-500 rounded-full;
+  animation: spin-slow 1s linear infinite;
+}
+
+/* 툴팁 스타일 */
+.tooltip {
+  @apply absolute bg-gradient-to-r from-sky-500 to-indigo-600;
+  @apply text-white text-sm font-semibold px-3 py-2 rounded-xl;
+  @apply shadow-lg shadow-blue-300/50;
+  @apply opacity-0 pointer-events-none transition-opacity duration-300;
+}
+
+.tooltip-trigger:hover .tooltip {
+  @apply opacity-100;
+}
+
+/* 모바일 최적화 유틸리티 */
+@layer utilities {
+  /* 안전 영역 패딩 (노치 대응) */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* 터치 최적화 버튼 크기 */
+  .touch-target {
+    @apply min-w-[44px] min-h-[44px];
+  }
+}
