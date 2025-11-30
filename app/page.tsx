@@ -12,7 +12,7 @@ export default function Home() {
     hour: '',
     minute: '',
     isLunar: false,
-    hasTime: false
+    noTime: false  // 시간 모름 토글
   });
 
   const isValid = birthData.year.length === 4 && 
@@ -20,14 +20,16 @@ export default function Home() {
                   birthData.day.length > 0;
 
   const handleSubmit = () => {
-    // 로딩 페이지로 이동 후 대시보드로
+    // 데이터를 localStorage에 저장
+    localStorage.setItem('birthData', JSON.stringify(birthData));
+    // 로딩 페이지로 이동
     router.push('/loading');
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="card-cute p-8 max-w-lg w-full">
-        {/* 헤더 - 이모티콘 효과 제거 */}
+        {/* 헤더 */}
         <div className="text-center mb-8">
           <div className="text-6xl mb-4">🔮</div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 bg-clip-text text-transparent mb-3">
@@ -68,7 +70,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 생년월일 입력 - 반응형 */}
+        {/* 생년월일 입력 */}
         <div className="mb-6">
           <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
             <span className="text-xl">🎂</span>
@@ -115,25 +117,30 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 태어난 시간 입력 - 선택사항 */}
+        {/* 태어난 시간 입력 - 기본으로 표시 */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-3">
             <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
               <span className="text-xl">⏰</span>
-              <span>태어난 시간 (선택사항)</span>
+              <span>태어난 시간</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
-                checked={birthData.hasTime}
-                onChange={(e) => setBirthData({...birthData, hasTime: e.target.checked})}
+                checked={birthData.noTime}
+                onChange={(e) => setBirthData({
+                  ...birthData, 
+                  noTime: e.target.checked,
+                  hour: e.target.checked ? '' : birthData.hour,
+                  minute: e.target.checked ? '' : birthData.minute
+                })}
                 className="w-4 h-4 text-sky-500 rounded"
               />
-              <span className="text-xs text-gray-600">시간 알고 있음</span>
+              <span className="text-xs text-gray-600">태어난 시간 모름</span>
             </label>
           </div>
           
-          {birthData.hasTime && (
+          {!birthData.noTime && (
             <div className="flex flex-wrap items-center gap-2">
               <input
                 type="text"
@@ -168,7 +175,7 @@ export default function Home() {
           
           <div className="mt-3 p-3 bg-sky-50 rounded-2xl border-2 border-sky-100">
             <p className="text-xs text-sky-700 font-medium">
-              💡 {birthData.hasTime ? '정확한 사주 분석을 위해 태어난 시간을 입력해주세요' : '시간을 모르면 기본 운세로 확인해요'}
+              💡 {birthData.noTime ? '시간을 모르면 기본 운세로 확인해요' : '정확한 사주 분석을 위해 태어난 시간을 입력해주세요'}
             </p>
           </div>
         </div>

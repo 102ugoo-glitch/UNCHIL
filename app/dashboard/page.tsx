@@ -1,12 +1,41 @@
 'use client';
 
-import { useState } from 'react';
-import Header from '@/components/Header';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import HistoryChart from '@/components/HistoryChart';
-import { todayData, yesterdayData, mockHistoryData, generateHighlights, getBoosterMessage, mockUserSaju } from '@/lib/data';
+import { todayData, yesterdayData, mockHistoryData, generateHighlights, getBoosterMessage, mockUserSaju, calculateSaju } from '@/lib/data';
 
 export default function Dashboard() {
-  // 비중 설정 (기본값)
+  const router = useRouter();
+  const [userInfo, setUserInfo] = useState({
+    birth: '1990년 5월 15일',
+    birthTime: '14시 30분',
+    ddi: '말띠',
+    ilju: mockUserSaju.ilgan
+  });
+
+  // localStorage에서 정보 가져오기
+  useEffect(() => {
+    const savedData = localStorage.getItem('birthData');
+    if (savedData) {
+      const data = JSON.parse(savedData);
+      const birthStr = `${data.year}년 ${data.month}월 ${data.day}일`;
+      const timeStr = data.noTime ? '시간 정보 없음' : `${data.hour}시 ${data.minute}분`;
+      
+      // 사주 계산
+      const birthDate = new Date(parseInt(data.year), parseInt(data.month) - 1, parseInt(data.day));
+      const saju = calculateSaju(birthDate);
+      
+      setUserInfo({
+        birth: birthStr,
+        birthTime: timeStr,
+        ddi: saju.ilji.split('(')[1]?.replace(')', '') || '알 수 없음',
+        ilju: saju.ilgan
+      });
+    }
+  }, []);
+
+  // 비중 설정
   const [weights, setWeights] = useState({
     ohasa: 40,
     star: 30,
@@ -14,10 +43,8 @@ export default function Dashboard() {
     ddi: 10
   });
 
-  // 각 점수
   const scores = todayData.scores;
   
-  // 가중 평균 점수 계산
   const calculateWeightedAvg = (s: typeof scores, w: typeof weights) => {
     return Number((
       (s.ohasa * w.ohasa + s.star * w.star + s.saju * w.saju + s.ddi * w.ddi) / 100
@@ -31,15 +58,6 @@ export default function Dashboard() {
   const highlights = generateHighlights(scores);
   const booster = getBoosterMessage(avgScore, mockUserSaju);
   
-  // 사용자 정보 (예시)
-  const userInfo = {
-    birth: '1990년 5월 15일',
-    birthTime: '14시 30분',
-    ddi: '말띠',
-    ilju: mockUserSaju.ilgan
-  };
-  
-  // 각 운세별 등수
   const scoresArray = [
     { name: '오하아사', value: scores.ohasa, key: 'ohasa' },
     { name: '별자리', value: scores.star, key: 'star' },
@@ -51,7 +69,6 @@ export default function Dashboard() {
     return scoresArray.findIndex(s => s.key === key) + 1;
   };
   
-  // 운세별 상세 설명 (3줄 이상)
   const getDetailedDescription = (key: string, value: number) => {
     const descriptions: Record<string, any> = {
       ohasa: {
@@ -81,7 +98,6 @@ export default function Dashboard() {
     return descriptions[key].low;
   };
   
-  // 주의 포인트 요약
   const getCautionPoints = () => {
     const lowScores = scoresArray.filter(s => s.value < 50);
     if (lowScores.length === 0) {
@@ -101,78 +117,119 @@ export default function Dashboard() {
     return points.join(', ') + '.';
   };
 
+  // 비중 변경 시 자동 조정
+  const handleWeightChange = (key: string, newValue: number) => {
+    const otherKeys = Object.keys(weights).filter(k => k !== key);
+    const remaining = 100 - newValue;
+    
+    // 나머지를 기존 비율대로 분배
+    const currentOthersTotal = otherKeys.reduce((sum, k) => sum + weights[k as keyof typeof weights], 0);
+    
+    const newWeights = { ...weights, [key]: newValue };
+    
+    if (currentOthersTotal > 0) {
+      otherKeys.forEach(k => {
+        newWeights[k as keyof typeof weights] = Math.round((weights[k as keyof typeof weights] / currentOthersTotal) * remaining);
+      });
+      
+      // 반올림 오차 보정
+      const total = Object.values(newWeights).reduce((a, b) => a + b, 0);
+      if (total !== 100) {
+        newWeights[otherKeys[0] as keyof typeof weights] += (100 - total);
+      }
+    }
+    
+    setWeights(newWeights);
+  };
+
   return (
     <div className="min-h-screen"> 
-      <Header />
+      {/* 헤더 - 뒤로가기 버튼 추가 */}
+      <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-sky-200 shadow-lg shadow-blue-100/50">
+        <div className="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+          <button 
+            onClick={() => router.push('/')}
+            className="flex items-center gap-2 text-gray-600 hover:text-sky-500 font-semibold transition-colors"
+          >
+            <span>←</span>
+            <span>홈으로</span>
+          </button>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">💙</span>
+            <h1 className="text-2xl font-extrabold bg-gradient-to-r from-sky-500 to-indigo-600 bg-clip-text text-transparent">운칠 UNCHIL</h1>
+          </div>
+          <div className="w-20"></div> {/* 중앙 정렬을 위한 빈 공간 */}
+        </div>
+      </header>
       
       <main className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-        {/* 사용자 정보 카드 */}
+        {/* 사용자 정보 */}
         <div className="card-highlight p-6">
           <h3 className="text-sm font-bold text-gray-600 mb-3">나의 정보</h3>
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-xs text-gray-500 mb-1">생년월일</p>
-              <p className="font-bold text-gray-800">{userInfo.birth}</p>
+              <p className="font-bold text-gray-800 text-sm">{userInfo.birth}</p>
               <p className="text-xs text-gray-600">{userInfo.birthTime}</p>
             </div>
             <div>
               <p className="text-xs text-gray-500 mb-1">띠</p>
-              <p className="font-bold text-gray-800 text-lg">{userInfo.ddi}</p>
+              <p className="font-bold text-gray-800 text-base">{userInfo.ddi}</p>
             </div>
             <div>
               <p className="text-xs text-gray-500 mb-1">일주</p>
-              <p className="font-bold text-gray-800">{userInfo.ilju}</p>
+              <p className="font-bold text-gray-800 text-sm">{userInfo.ilju}</p>
             </div>
           </div>
         </div>
 
-        {/* 총점 카드 */}
+        {/* 총점 */}
         <div className="jelly-card relative p-8">
-          <div className="relative z-10">
-            <p className="text-gray-500 text-sm mb-2 font-semibold">오늘의 운칠</p>
-            <h1 className="text-6xl font-extrabold bg-gradient-to-r from-sky-500 to-indigo-600 bg-clip-text text-transparent">
-              {avgScore}<span className="text-gray-600 ml-1">점</span>
-            </h1>
-            <p className="text-sm text-gray-500 mt-3">
-              어제 {yesterdayAvg}점 → 오늘 {avgScore}점 
-              <span className={scoreDiff > 0 ? 'text-emerald-500 font-bold' : scoreDiff < 0 ? 'text-rose-500 font-bold' : 'text-gray-500 font-bold'}>
-                {scoreDiff !== 0 ? ` (${scoreDiff > 0 ? '↑' : '↓'}${Math.abs(scoreDiff)})` : ' (변동 없음)'}
-              </span>
-            </p>
-            
-            {/* 4개 소스 점수 - 상세 설명 포함 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-              {['ohasa', 'star', 'saju', 'ddi'].map((key) => {
-                const names: Record<string, string> = {
-                  ohasa: '오하아사',
-                  star: '별자리',
-                  saju: '사주',
-                  ddi: '띠'
-                };
-                const value = scores[key as keyof typeof scores];
-                
-                return (
-                  <div key={key} className="bg-sky-100/60 border border-sky-200 p-4 rounded-xl hover:shadow-md transition-all">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-sky-600 text-sm font-bold">{names[key]}</p>
-                      <span className="text-xs bg-sky-200 text-sky-800 px-2 py-1 rounded-full font-bold">
-                        {getRank(key)}위
-                      </span>
-                    </div>
-                    <p className="text-3xl font-extrabold text-indigo-700 mb-2">
-                      {value.toFixed(1)}점
-                    </p>
-                    <p className="text-xs text-gray-600 leading-relaxed">
-                      {getDetailedDescription(key, value)}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          <p className="text-gray-500 text-sm mb-2 font-semibold">오늘의 운칠</p>
+          <h1 className="text-6xl font-extrabold bg-gradient-to-r from-sky-500 to-indigo-600 bg-clip-text text-transparent">
+            {avgScore}<span className="text-gray-600 ml-1">점</span>
+          </h1>
+          <p className="text-sm text-gray-500 mt-3">
+            어제 {yesterdayAvg}점 → 오늘 {avgScore}점 
+            <span className={scoreDiff > 0 ? 'text-emerald-500 font-bold' : scoreDiff < 0 ? 'text-rose-500 font-bold' : 'text-gray-500 font-bold'}>
+              {scoreDiff !== 0 ? ` (${scoreDiff > 0 ? '↑' : '↓'}${Math.abs(scoreDiff)})` : ' (변동 없음)'}
+            </span>
+          </p>
         </div>
 
-        {/* 오늘의 하이라이트 - 총점 포함 */}
+        {/* 4개 운세 - 1줄씩 */}
+        <div className="space-y-4">
+          {['ohasa', 'star', 'saju', 'ddi'].map((key) => {
+            const names: Record<string, string> = {
+              ohasa: '오하아사',
+              star: '별자리',
+              saju: '사주',
+              ddi: '띠'
+            };
+            const value = scores[key as keyof typeof scores];
+            
+            return (
+              <div key={key} className="bg-sky-100/60 border border-sky-200 p-5 rounded-xl hover:shadow-md transition-all">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <p className="text-sky-700 text-lg font-bold">{names[key]}</p>
+                    <span className="text-xs bg-sky-200 text-sky-800 px-3 py-1 rounded-full font-bold">
+                      {getRank(key)}위
+                    </span>
+                  </div>
+                  <p className="text-3xl font-extrabold text-indigo-700">
+                    {value.toFixed(1)}점
+                  </p>
+                </div>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  {getDetailedDescription(key, value)}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* 하이라이트 - 소수점 수정 */}
         <div className="jelly-card rounded-xl p-6 space-y-3">
           <h3 className="text-lg font-bold text-gray-700 mb-4">오늘의 하이라이트 ✨</h3>
           <div className="p-4 bg-gradient-to-r from-sky-50 to-blue-50 rounded-xl border-2 border-sky-200 mb-4">
@@ -183,9 +240,13 @@ export default function Dashboard() {
               {avgScore >= 70 ? '매우 좋은 하루예요!' : avgScore >= 50 ? '괜찮은 하루예요!' : '조심스럽게 보내세요!'}
             </p>
           </div>
-          {highlights.map((h, i) => (
-            <p key={i} className="text-gray-600 border-l-4 border-sky-400 pl-3 py-2 transition-all hover:shadow-sm hover:border-blue-500 text-sm">{h}</p>
-          ))}
+          {highlights.map((h, i) => {
+            // 소수점 첫째자리까지만 표시
+            const fixedText = h.replace(/(\d+\.\d{2,})/g, (match) => parseFloat(match).toFixed(1));
+            return (
+              <p key={i} className="text-gray-600 border-l-4 border-sky-400 pl-3 py-2 text-sm">{fixedText}</p>
+            );
+          })}
         </div>
 
         {/* 주의 포인트 */}
@@ -198,8 +259,8 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* 친구 부스터 - 한글로 변경 */}
-        <div className="bg-gradient-to-r from-sky-400/90 to-indigo-600/90 rounded-3xl p-6 shadow-xl shadow-blue-300/50 hover:shadow-2xl hover:shadow-blue-400/60 transition-all">
+        {/* 친구 부스터 */}
+        <div className="bg-gradient-to-r from-sky-400/90 to-indigo-600/90 rounded-3xl p-6 shadow-xl shadow-blue-300/50">
           <h3 className="text-xl font-extrabold text-white mb-2">친구 운세 부스터 💙</h3>
           <p className="text-blue-50 mb-2 text-sm">
             부족한 오행: {mockUserSaju.deficientOhang === '木' ? '나무(목)' : 
@@ -215,13 +276,12 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* 7일 히스토리 */}
         <HistoryChart history={mockHistoryData} />
 
-        {/* 운세 비중 설정 */}
+        {/* 비중 설정 - 자동 조정 */}
         <div className="jelly-card p-6">
           <h3 className="text-lg font-bold text-gray-700 mb-4">운세 비중 설정 ⚖️</h3>
-          <p className="text-xs text-gray-500 mb-4">각 운세가 총점에 미치는 영향을 조정하세요 (합계: {weights.ohasa + weights.star + weights.saju + weights.ddi}%)</p>
+          <p className="text-xs text-gray-500 mb-4">각 운세가 총점에 미치는 영향을 조정하세요 (합계: {Object.values(weights).reduce((a,b) => a+b, 0)}%)</p>
           
           <div className="space-y-4">
             {Object.entries(weights).map(([key, value]) => {
@@ -243,16 +303,7 @@ export default function Dashboard() {
                     min="0"
                     max="100"
                     value={value}
-                    onChange={(e) => {
-                      const newValue = parseInt(e.target.value);
-                      const total = Object.entries(weights)
-                        .filter(([k]) => k !== key)
-                        .reduce((sum, [, v]) => sum + v, 0);
-                      
-                      if (total + newValue <= 100) {
-                        setWeights({...weights, [key]: newValue});
-                      }
-                    }}
+                    onChange={(e) => handleWeightChange(key, parseInt(e.target.value))}
                     className="w-full h-2 bg-sky-200 rounded-lg appearance-none cursor-pointer"
                     style={{
                       background: `linear-gradient(to right, #38bdf8 0%, #38bdf8 ${value}%, #e0f2fe ${value}%, #e0f2fe 100%)`
