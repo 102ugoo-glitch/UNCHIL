@@ -1,32 +1,21 @@
-// lib/data.ts - 완전판
+// lib/data.ts - 정확한 만세력 (1999.10.7 = 임진 기준)
 
-// 천간 (10개)
 const CHEONGAN = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'] as const;
-
-// 지지 (12개)
 const JIJI = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'] as const;
-
-// 띠 이름
 const JIJI_ANIMALS = ['쥐', '소', '호랑이', '토끼', '용', '뱀', '말', '양', '원숭이', '닭', '개', '돼지'] as const;
 
-// 오행
 const CHEONGAN_OHANG = {
-  '갑': '木', '을': '木',
-  '병': '火', '정': '火',
-  '무': '土', '기': '土',
-  '경': '金', '신': '金',
+  '갑': '木', '을': '木', '병': '火', '정': '火',
+  '무': '土', '기': '土', '경': '金', '신': '金',
   '임': '水', '계': '水'
 };
 
 const JIJI_OHANG = {
-  '인': '木', '묘': '木',
-  '사': '火', '오': '火',
+  '인': '木', '묘': '木', '사': '火', '오': '火',
   '진': '土', '술': '土', '축': '土', '미': '土',
-  '신': '金', '유': '金',
-  '자': '水', '해': '水'
+  '신': '金', '유': '金', '자': '水', '해': '水'
 };
 
-// 타입 정의
 export interface DailyScores {
   ohasa: number;
   star: number;
@@ -58,23 +47,23 @@ export interface BoosterMessage {
   complementaryGan?: string[];
 }
 
-// 연도로 띠 계산
+// 띠 계산
 export function getAnimalSign(year: number): string {
   const index = (year - 1900) % 12;
-  return JIJI_ANIMALS[index];
+  return JIJI_ANIMALS[index < 0 ? index + 12 : index];
 }
 
-// 일주 계산
+// 정확한 일주 계산 - 1999년 10월 7일 = 임진일주 기준
 export function calculateIlju(year: number, month: number, day: number): string {
-  const baseDate = new Date(1900, 0, 1);
-  const targetDate = new Date(year, month - 1, day);
+  const knownDate = new Date(1999, 9, 7); // 1999.10.7 = 임진
+  const knownGapja = 28; // 임(8) + 진(4) in 60갑자
   
-  const diffTime = targetDate.getTime() - baseDate.getTime();
+  const targetDate = new Date(year, month - 1, day);
+  const diffTime = targetDate.getTime() - knownDate.getTime();
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
   
-  const baseGapja = 26;
-  // 음수 처리 추가
-  const gapjaIndex = ((baseGapja + diffDays) % 60 + 60) % 60;
+  let gapjaIndex = (knownGapja + diffDays) % 60;
+  if (gapjaIndex < 0) gapjaIndex += 60;
   
   const ganIndex = gapjaIndex % 10;
   const jiIndex = gapjaIndex % 12;
@@ -95,7 +84,6 @@ export function calculateSaju(birthDate: Date): SajuInfo {
   const ilganOhang = CHEONGAN_OHANG[ilgan as keyof typeof CHEONGAN_OHANG];
   const iljiOhang = JIJI_OHANG[ilji as keyof typeof JIJI_OHANG];
   
-  // 간단한 오행 부족/과다 판단 (실제로는 더 복잡)
   const ohangCount = { '木': 0, '火': 0, '土': 0, '金': 0, '水': 0 };
   ohangCount[ilganOhang]++;
   ohangCount[iljiOhang]++;
@@ -115,20 +103,17 @@ export function calculateSaju(birthDate: Date): SajuInfo {
   };
 }
 
-// 날짜 기반 점수 생성 (의사 랜덤)
 function generateDailyScore(date: Date, baseScore: number = 70): number {
   const seed = date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
   const random = Math.sin(seed) * 10000;
-  const variance = (random - Math.floor(random)) * 40 - 20; // -20 ~ +20
+  const variance = (random - Math.floor(random)) * 40 - 20;
   return Math.max(30, Math.min(100, baseScore + variance));
 }
 
-// 오늘 날짜
 const today = new Date();
 const yesterday = new Date(today);
 yesterday.setDate(yesterday.getDate() - 1);
 
-// 오늘의 점수
 export const todayData: DailyData = {
   date: today.toISOString().split('T')[0],
   scores: {
@@ -141,7 +126,6 @@ export const todayData: DailyData = {
   luckyColor: '파란색'
 };
 
-// 어제의 점수
 export const yesterdayData: DailyData = {
   date: yesterday.toISOString().split('T')[0],
   scores: {
@@ -154,7 +138,6 @@ export const yesterdayData: DailyData = {
   luckyColor: '초록색'
 };
 
-// 7일 히스토리
 export const mockHistoryData: DailyData[] = Array.from({ length: 7 }, (_, i) => {
   const date = new Date(today);
   date.setDate(date.getDate() - (6 - i));
@@ -171,7 +154,6 @@ export const mockHistoryData: DailyData[] = Array.from({ length: 7 }, (_, i) => 
   };
 });
 
-// 하이라이트 생성
 export function generateHighlights(scores: DailyScores): string[] {
   const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
   const bestCategory = sortedScores[0][0];
@@ -191,14 +173,12 @@ export function generateHighlights(scores: DailyScores): string[] {
   ];
 }
 
-// 친구 부스터 메시지
 export function getBoosterMessage(totalScore: number, userSaju: SajuInfo): BoosterMessage {
   let bonusScore = 5;
   if (totalScore >= 80) bonusScore = 5;
   else if (totalScore >= 60) bonusScore = 10;
   else bonusScore = 15;
   
-  // 부족한 오행을 보완하는 천간
   const complementaryGan: string[] = [];
   Object.entries(CHEONGAN_OHANG).forEach(([gan, ohang]) => {
     if (ohang === userSaju.deficientOhang) {
@@ -213,7 +193,6 @@ export function getBoosterMessage(totalScore: number, userSaju: SajuInfo): Boost
   };
 }
 
-// Mock 사주 (예시용)
 export const mockUserSaju: SajuInfo = {
   ilgan: '임',
   ilji: '진',

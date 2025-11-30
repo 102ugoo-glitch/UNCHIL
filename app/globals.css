@@ -13,17 +13,15 @@
 }
 
 @layer base {
-  /* 배경 + 폰트 */
   body {
     @apply bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-100;
     @apply text-gray-800;
-    font-family: 'OnglipBakdahyeon', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-family: 'OnglipBakdahyeon', -apple-system, sans-serif !important;
   }
   
-  /* 모든 요소에 폰트 강제 적용 */
+  /* 🎯 모든 요소에 폰트 강제 적용! */
   * {
-    font-family: 'OnglipBakdahyeon', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-    -webkit-tap-highlight-color: transparent;
+    font-family: 'OnglipBakdahyeon', -apple-system, sans-serif !important;
   }
   
   html {
