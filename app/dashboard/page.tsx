@@ -3,15 +3,39 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import HistoryChart from '@/components/HistoryChart';
-import { todayData, yesterdayData, mockHistoryData, generateHighlights, getBoosterMessage, mockUserSaju, calculateSaju } from '@/lib/data';
+import { todayData, yesterdayData, mockHistoryData, generateHighlights, getBoosterMessage, mockUserSaju } from '@/lib/data';
+
+// 띠 계산
+function getAnimalSign(year: number): string {
+  const animals = ['쥐', '소', '호랑이', '토끼', '용', '뱀', '말', '양', '원숭이', '닭', '개', '돼지'];
+  const index = (year - 1900) % 12;
+  return animals[index];
+}
+
+// 일주 계산 (간단 버전)
+function calculateIlju(year: number, month: number, day: number): string {
+  const cheongan = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
+  const jiji = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
+  
+  // 1900년 1월 1일을 기준점 (경인일 = 26)
+  const baseDate = new Date(1900, 0, 1);
+  const targetDate = new Date(year, month - 1, day);
+  const diffDays = Math.floor((targetDate.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24));
+  
+  const gapjaIndex = (26 + diffDays) % 60;
+  const ganIndex = gapjaIndex % 10;
+  const jiIndex = gapjaIndex % 12;
+  
+  return `${cheongan[ganIndex]}${jiji[jiIndex]}`;
+}
 
 export default function Dashboard() {
   const router = useRouter();
   const [userInfo, setUserInfo] = useState({
-    birth: '1990년 5월 15일',
-    birthTime: '14시 30분',
-    ddi: '말띠',
-    ilju: mockUserSaju.ilgan
+    birth: '1999년 10월 7일',
+    birthTime: '시간 정보 없음',
+    ddi: '토끼',
+    ilju: '임진일주'
   });
 
   // localStorage에서 정보 가져오기
@@ -19,18 +43,24 @@ export default function Dashboard() {
     const savedData = localStorage.getItem('birthData');
     if (savedData) {
       const data = JSON.parse(savedData);
-      const birthStr = `${data.year}년 ${data.month}월 ${data.day}일`;
+      const year = parseInt(data.year);
+      const month = parseInt(data.month);
+      const day = parseInt(data.day);
+      
+      const birthStr = `${year}년 ${month}월 ${day}일`;
       const timeStr = data.noTime ? '시간 정보 없음' : `${data.hour}시 ${data.minute}분`;
       
-      // 사주 계산
-      const birthDate = new Date(parseInt(data.year), parseInt(data.month) - 1, parseInt(data.day));
-      const saju = calculateSaju(birthDate);
+      // 띠 계산
+      const animal = getAnimalSign(year);
+      
+      // 일주 계산
+      const ilju = calculateIlju(year, month, day);
       
       setUserInfo({
         birth: birthStr,
         birthTime: timeStr,
-        ddi: saju.ilji.split('(')[1]?.replace(')', '') || '알 수 없음',
-        ilju: saju.ilgan
+        ddi: animal,
+        ilju: `${ilju}일주`
       });
     }
   }, []);
@@ -122,7 +152,6 @@ export default function Dashboard() {
     const otherKeys = Object.keys(weights).filter(k => k !== key);
     const remaining = 100 - newValue;
     
-    // 나머지를 기존 비율대로 분배
     const currentOthersTotal = otherKeys.reduce((sum, k) => sum + weights[k as keyof typeof weights], 0);
     
     const newWeights = { ...weights, [key]: newValue };
@@ -132,7 +161,6 @@ export default function Dashboard() {
         newWeights[k as keyof typeof weights] = Math.round((weights[k as keyof typeof weights] / currentOthersTotal) * remaining);
       });
       
-      // 반올림 오차 보정
       const total = Object.values(newWeights).reduce((a, b) => a + b, 0);
       if (total !== 100) {
         newWeights[otherKeys[0] as keyof typeof weights] += (100 - total);
@@ -144,7 +172,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen"> 
-      {/* 헤더 - 뒤로가기 버튼 추가 */}
+      {/* 헤더 */}
       <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-sky-200 shadow-lg shadow-blue-100/50">
         <div className="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
           <button 
@@ -158,7 +186,7 @@ export default function Dashboard() {
             <span className="text-2xl">💙</span>
             <h1 className="text-2xl font-extrabold bg-gradient-to-r from-sky-500 to-indigo-600 bg-clip-text text-transparent">운칠 UNCHIL</h1>
           </div>
-          <div className="w-20"></div> {/* 중앙 정렬을 위한 빈 공간 */}
+          <div className="w-20"></div>
         </div>
       </header>
       
@@ -229,7 +257,7 @@ export default function Dashboard() {
           })}
         </div>
 
-        {/* 하이라이트 - 소수점 수정 */}
+        {/* 하이라이트 */}
         <div className="jelly-card rounded-xl p-6 space-y-3">
           <h3 className="text-lg font-bold text-gray-700 mb-4">오늘의 하이라이트 ✨</h3>
           <div className="p-4 bg-gradient-to-r from-sky-50 to-blue-50 rounded-xl border-2 border-sky-200 mb-4">
@@ -241,7 +269,6 @@ export default function Dashboard() {
             </p>
           </div>
           {highlights.map((h, i) => {
-            // 소수점 첫째자리까지만 표시
             const fixedText = h.replace(/(\d+\.\d{2,})/g, (match) => parseFloat(match).toFixed(1));
             return (
               <p key={i} className="text-gray-600 border-l-4 border-sky-400 pl-3 py-2 text-sm">{fixedText}</p>
@@ -278,7 +305,7 @@ export default function Dashboard() {
 
         <HistoryChart history={mockHistoryData} />
 
-        {/* 비중 설정 - 자동 조정 */}
+        {/* 비중 설정 */}
         <div className="jelly-card p-6">
           <h3 className="text-lg font-bold text-gray-700 mb-4">운세 비중 설정 ⚖️</h3>
           <p className="text-xs text-gray-500 mb-4">각 운세가 총점에 미치는 영향을 조정하세요 (합계: {Object.values(weights).reduce((a,b) => a+b, 0)}%)</p>
