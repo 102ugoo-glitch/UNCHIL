@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 /* 온글잎 박다현체 폰트 */
+@import url('https://fastly.jsdelivr.net/gh/projectnoonnu/2407-2@1.0/OnglipBakdahyeon.woff2');
+
 @font-face {
   font-family: 'OnglipBakdahyeon';
   src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2407-2@1.0/OnglipBakdahyeon.woff2') format('woff2');
@@ -11,95 +13,87 @@
 }
 
 @layer base {
-  /* 배경: 젤리처럼 부드러운 파스텔 블루톤 그라데이션 적용 */
+  /* 배경 + 폰트 */
   body {
     @apply bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-100;
     @apply text-gray-800;
-    font-family: 'OnglipBakdahyeon', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'OnglipBakdahyeon', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   }
   
-  /* 모바일 최적화: 스크롤 부드럽게 */
+  /* 모든 요소에 폰트 강제 적용 */
+  * {
+    font-family: 'OnglipBakdahyeon', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
   html {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
   }
-  
-  /* 모바일에서 텍스트 선택 방지 (선택사항) */
-  * {
-    -webkit-tap-highlight-color: transparent;
-  }
 }
 
-/* 젤리 카드 효과 (대시보드 메인 컴포넌트) */
+/* 젤리 카드 효과 - 그림자/테두리 제거 */
 .jelly-card {
-  @apply bg-white/95 backdrop-blur-sm rounded-3xl shadow-lg border border-blue-100;
-  @apply transition-all duration-300 hover:shadow-2xl hover:shadow-blue-300/70 hover:-translate-y-1;
+  @apply bg-white/95 backdrop-blur-sm rounded-3xl;
+  @apply transition-all duration-300 hover:-translate-y-1;
 }
 
-/* 귀여운 버튼 효과 (btn-cute) */
+/* 귀여운 버튼 - 그림자 제거 */
 .btn-cute {
   @apply bg-gradient-to-r from-sky-400 to-indigo-500;
   @apply hover:from-sky-500 hover:to-indigo-600;
   @apply text-white font-extrabold py-3 px-6 rounded-full;
   @apply transition-all transform hover:scale-[1.02] active:scale-95;
-  @apply shadow-xl shadow-blue-300/50 hover:shadow-2xl hover:shadow-blue-400/70;
-  /* 모바일 터치 최적화 */
   @apply select-none;
 }
 
-/* 세컨더리 버튼 (부드러운 파스텔 블루) */
+/* 세컨더리 버튼 */
 .btn-secondary {
   @apply bg-gradient-to-r from-blue-200 to-cyan-200;
   @apply hover:from-blue-300 hover:to-cyan-300;
   @apply text-blue-900 font-bold py-3 px-6 rounded-full;
   @apply transition-all transform hover:scale-[1.02];
-  @apply shadow-lg shadow-blue-200/50 hover:shadow-xl hover:shadow-blue-300/60;
   @apply select-none;
 }
 
-/* 귀여운 카드 (card-cute - 홈 화면 등) */
+/* 귀여운 카드 - 그림자/테두리 제거 */
 .card-cute {
-  @apply bg-white/90 backdrop-blur-md rounded-[2rem] shadow-2xl shadow-blue-200/60;
-  @apply border-2 border-blue-100;
-  @apply transition-all hover:shadow-2xl hover:shadow-blue-300/70 hover:-translate-y-2;
+  @apply bg-white/90 backdrop-blur-md rounded-[2rem];
+  @apply transition-all hover:-translate-y-2;
 }
 
-/* 특별한 강조 카드 */
+/* 강조 카드 - 테두리 제거 */
 .card-highlight {
   @apply bg-gradient-to-br from-blue-50 to-sky-100 rounded-[2rem];
-  @apply shadow-2xl shadow-indigo-200/50 border-2 border-sky-200;
-  @apply transition-all hover:shadow-xl hover:-translate-y-1;
+  @apply transition-all hover:-translate-y-1;
 }
 
-/* 귀여운 입력창 (input-cute) */
+/* 입력창 - 테두리만 유지 */
 .input-cute {
   @apply bg-sky-50/50 border-2 border-blue-200;
   @apply text-gray-700 rounded-2xl;
   @apply focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-300/50;
   @apply px-4 py-3;
   @apply transition-all placeholder:text-blue-300;
-  /* 모바일 입력 최적화 */
-  font-size: 16px; /* iOS 자동 줌 방지 */
+  font-size: 16px;
 }
 
-/* 텍스트영역도 동일한 스타일 */
 .textarea-cute {
   @apply bg-sky-50/50 border-2 border-blue-200;
   @apply text-gray-700 rounded-2xl;
   @apply focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-300/50;
   @apply px-4 py-3;
   @apply transition-all placeholder:text-blue-300 resize-none;
-  font-size: 16px; /* iOS 자동 줌 방지 */
+  font-size: 16px;
 }
 
-/* 귀여운 배지/태그 */
+/* 배지 */
 .badge-cute {
   @apply inline-block bg-gradient-to-r from-sky-200 to-blue-300;
   @apply text-blue-900 text-xs font-bold px-3 py-1 rounded-full;
-  @apply shadow-md shadow-blue-200/50;
 }
 
-/* 귀여운 스크롤바 */
+/* 스크롤바 */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -119,7 +113,7 @@
   background: linear-gradient(to bottom, #38bdf8, #60a5fa);
 }
 
-/* 귀여운 애니메이션 */
+/* 애니메이션 */
 @keyframes float {
   0%, 100% {
     transform: translateY(0px);
@@ -176,43 +170,38 @@
   animation: bubble 4s ease-in-out infinite;
 }
 
-/* 글래스모피즘 효과 (블루 버전) */
+/* 글래스모피즘 */
 .glass-blue {
   @apply bg-white/30 backdrop-blur-lg;
   @apply border border-white/40;
-  @apply shadow-xl shadow-blue-200/30;
 }
 
-/* 구름 효과 카드 */
+/* 구름 카드 - 테두리 제거 */
 .cloud-card {
   @apply bg-gradient-to-br from-white via-sky-50 to-blue-100;
-  @apply rounded-[2.5rem] shadow-2xl shadow-sky-300/40;
-  @apply border-4 border-white;
-  @apply transition-all hover:shadow-blue-400/50 hover:scale-[1.01];
+  @apply rounded-[2.5rem];
+  @apply transition-all hover:scale-[1.01];
 }
 
-/* 아이콘 홀더 (블루 그라데이션) */
+/* 아이콘 홀더 */
 .icon-holder {
   @apply bg-gradient-to-br from-sky-400 to-indigo-500;
   @apply text-white rounded-2xl p-3;
-  @apply shadow-lg shadow-blue-300/50;
   @apply inline-flex items-center justify-center;
 }
 
-/* 알림/경고 스타일 */
+/* 알림 - 테두리만 */
 .alert-info {
   @apply bg-sky-100 border-l-4 border-sky-500;
   @apply text-sky-900 p-4 rounded-r-2xl;
-  @apply shadow-md shadow-sky-200/50;
 }
 
 .alert-success {
   @apply bg-emerald-100 border-l-4 border-emerald-500;
   @apply text-emerald-900 p-4 rounded-r-2xl;
-  @apply shadow-md shadow-emerald-200/50;
 }
 
-/* 호버시 반짝이는 효과 */
+/* 호버 효과 */
 .shine-effect {
   @apply relative overflow-hidden;
 }
@@ -229,29 +218,26 @@
   @apply translate-x-full;
 }
 
-/* 물방울 효과 */
+/* 물방울 */
 .water-drop {
   @apply bg-gradient-to-br from-sky-200 to-blue-300;
-  @apply rounded-full shadow-lg shadow-blue-300/60;
+  @apply rounded-full;
   @apply inline-block;
 }
 
-/* 귀여운 체크박스 스타일 */
+/* 체크박스/라디오 */
 .checkbox-cute {
   @apply appearance-none w-6 h-6 border-2 border-blue-300 rounded-lg;
   @apply checked:bg-gradient-to-r checked:from-sky-400 checked:to-blue-500;
   @apply checked:border-transparent;
   @apply transition-all cursor-pointer;
-  @apply shadow-md hover:shadow-lg;
 }
 
-/* 귀여운 라디오 버튼 */
 .radio-cute {
   @apply appearance-none w-6 h-6 border-2 border-blue-300 rounded-full;
   @apply checked:bg-gradient-to-r checked:from-sky-400 checked:to-blue-500;
   @apply checked:border-transparent;
   @apply transition-all cursor-pointer;
-  @apply shadow-md hover:shadow-lg;
 }
 
 /* 로딩 스피너 */
@@ -269,11 +255,10 @@
   animation: spin-slow 1s linear infinite;
 }
 
-/* 툴팁 스타일 */
+/* 툴팁 */
 .tooltip {
   @apply absolute bg-gradient-to-r from-sky-500 to-indigo-600;
   @apply text-white text-sm font-semibold px-3 py-2 rounded-xl;
-  @apply shadow-lg shadow-blue-300/50;
   @apply opacity-0 pointer-events-none transition-opacity duration-300;
 }
 
@@ -281,9 +266,8 @@
   @apply opacity-100;
 }
 
-/* 모바일 최적화 유틸리티 */
+/* 모바일 최적화 */
 @layer utilities {
-  /* 안전 영역 패딩 (노치 대응) */
   .safe-top {
     padding-top: env(safe-area-inset-top);
   }
@@ -292,7 +276,6 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
   
-  /* 터치 최적화 버튼 크기 */
   .touch-target {
     @apply min-w-[44px] min-h-[44px];
   }

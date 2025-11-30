@@ -73,17 +73,13 @@ export function calculateIlju(year: number, month: number, day: number): string 
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
   
   const baseGapja = 26;
-  const gapjaIndex = (baseGapja + diffDays) % 60;
+  // 음수 처리 추가
+  const gapjaIndex = ((baseGapja + diffDays) % 60 + 60) % 60;
   
-  const gan60: string[] = [];
-  const ji60: string[] = [];
+  const ganIndex = gapjaIndex % 10;
+  const jiIndex = gapjaIndex % 12;
   
-  for (let i = 0; i < 60; i++) {
-    gan60.push(CHEONGAN[i % 10]);
-    ji60.push(JIJI[i % 12]);
-  }
-  
-  return `${gan60[gapjaIndex]}${ji60[gapjaIndex]}`;
+  return `${CHEONGAN[ganIndex]}${JIJI[jiIndex]}`;
 }
 
 // 사주 계산
