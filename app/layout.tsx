@@ -14,16 +14,28 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* 모바일 뷰포트 설정 */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        {/* 온글잎 박다현체 폰트 */}
+        <link rel="preconnect" href="https://fastly.jsdelivr.net" />
+        <style dangerouslySetInnerHTML={{__html: `
+          @font-face {
+            font-family: 'OnglipBakdahyeon';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2407-2@1.0/OnglipBakdahyeon.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+          }
+          * {
+            font-family: 'OnglipBakdahyeon', 'Malgun Gothic', '맑은 고딕', sans-serif !important;
+          }
+          body {
+            font-family: 'OnglipBakdahyeon', 'Malgun Gothic', '맑은 고딕', sans-serif !important;
+          }
+        `}} />
       </head>
       <body className="min-h-screen">
-        {/* 모바일 크기로 제한하는 컨테이너 */}
         <div className="max-w-md mx-auto min-h-screen relative">
-          {/* 모바일 뷰 테두리 효과 (선택사항) */}
           <div className="hidden lg:block absolute inset-0 border-x-4 border-blue-200 pointer-events-none"></div>
-          
-          {/* 실제 콘텐츠 */}
           <div className="relative z-10">
             {children}
           </div>
