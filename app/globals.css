@@ -2,41 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 온글잎 박다현체 폰트 */
-@import url('https://fastly.jsdelivr.net/gh/projectnoonnu/2407-2@1.0/OnglipBakdahyeon.woff2');
-
-@font-face {
-  font-family: 'OnglipBakdahyeon';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2407-2@1.0/OnglipBakdahyeon.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
+/* 온글잎 박다현체 - 웹폰트 로드 */
+@import url('https://cdn.jsdelivr.net/gh/projectnoonnu/2407-2@1.0/OnglipBakdahyeon.woff2');
 
 @layer base {
+  /* 전체 폰트 강제 적용 */
+  html,
+  body,
+  * {
+    font-family: 'OnglipBakdahyeon', 'Malgun Gothic', '맑은 고딕', sans-serif !important;
+  }
+  
   body {
     @apply bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-100;
     @apply text-gray-800;
-    font-family: 'OnglipBakdahyeon', -apple-system, sans-serif !important;
-  }
-  
-  /* 🎯 모든 요소에 폰트 강제 적용! */
-  * {
-    font-family: 'OnglipBakdahyeon', -apple-system, sans-serif !important;
   }
   
   html {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
   }
+  
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
-/* 젤리 카드 효과 - 그림자/테두리 제거 */
+/* 카드 - 그림자/테두리 제거 */
 .jelly-card {
   @apply bg-white/95 backdrop-blur-sm rounded-3xl;
   @apply transition-all duration-300 hover:-translate-y-1;
 }
 
-/* 귀여운 버튼 - 그림자 제거 */
 .btn-cute {
   @apply bg-gradient-to-r from-sky-400 to-indigo-500;
   @apply hover:from-sky-500 hover:to-indigo-600;
@@ -45,7 +42,6 @@
   @apply select-none;
 }
 
-/* 세컨더리 버튼 */
 .btn-secondary {
   @apply bg-gradient-to-r from-blue-200 to-cyan-200;
   @apply hover:from-blue-300 hover:to-cyan-300;
@@ -54,19 +50,16 @@
   @apply select-none;
 }
 
-/* 귀여운 카드 - 그림자/테두리 제거 */
 .card-cute {
   @apply bg-white/90 backdrop-blur-md rounded-[2rem];
   @apply transition-all hover:-translate-y-2;
 }
 
-/* 강조 카드 - 테두리 제거 */
 .card-highlight {
   @apply bg-gradient-to-br from-blue-50 to-sky-100 rounded-[2rem];
   @apply transition-all hover:-translate-y-1;
 }
 
-/* 입력창 - 테두리만 유지 */
 .input-cute {
   @apply bg-sky-50/50 border-2 border-blue-200;
   @apply text-gray-700 rounded-2xl;
@@ -85,13 +78,11 @@
   font-size: 16px;
 }
 
-/* 배지 */
 .badge-cute {
   @apply inline-block bg-gradient-to-r from-sky-200 to-blue-300;
   @apply text-blue-900 text-xs font-bold px-3 py-1 rounded-full;
 }
 
-/* 스크롤바 */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -111,45 +102,14 @@
   background: linear-gradient(to bottom, #38bdf8, #60a5fa);
 }
 
-/* 애니메이션 */
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
 @keyframes sparkle {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(1.2) rotate(180deg);
-  }
-}
-
-@keyframes wave {
-  0%, 100% {
-    transform: translateX(0px);
-  }
-  50% {
-    transform: translateX(10px);
-  }
-}
-
-@keyframes bubble {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-100px) scale(0.5);
-    opacity: 0;
-  }
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  50% { opacity: 0.5; transform: scale(1.2) rotate(180deg); }
 }
 
 .animate-float {
@@ -160,35 +120,23 @@
   animation: sparkle 1.5s ease-in-out infinite;
 }
 
-.animate-wave {
-  animation: wave 2s ease-in-out infinite;
-}
-
-.animate-bubble {
-  animation: bubble 4s ease-in-out infinite;
-}
-
-/* 글래스모피즘 */
 .glass-blue {
   @apply bg-white/30 backdrop-blur-lg;
   @apply border border-white/40;
 }
 
-/* 구름 카드 - 테두리 제거 */
 .cloud-card {
   @apply bg-gradient-to-br from-white via-sky-50 to-blue-100;
   @apply rounded-[2.5rem];
   @apply transition-all hover:scale-[1.01];
 }
 
-/* 아이콘 홀더 */
 .icon-holder {
   @apply bg-gradient-to-br from-sky-400 to-indigo-500;
   @apply text-white rounded-2xl p-3;
   @apply inline-flex items-center justify-center;
 }
 
-/* 알림 - 테두리만 */
 .alert-info {
   @apply bg-sky-100 border-l-4 border-sky-500;
   @apply text-sky-900 p-4 rounded-r-2xl;
@@ -199,31 +147,6 @@
   @apply text-emerald-900 p-4 rounded-r-2xl;
 }
 
-/* 호버 효과 */
-.shine-effect {
-  @apply relative overflow-hidden;
-}
-
-.shine-effect::before {
-  content: '';
-  @apply absolute inset-0;
-  @apply bg-gradient-to-r from-transparent via-white/20 to-transparent;
-  @apply -translate-x-full;
-  @apply transition-transform duration-700;
-}
-
-.shine-effect:hover::before {
-  @apply translate-x-full;
-}
-
-/* 물방울 */
-.water-drop {
-  @apply bg-gradient-to-br from-sky-200 to-blue-300;
-  @apply rounded-full;
-  @apply inline-block;
-}
-
-/* 체크박스/라디오 */
 .checkbox-cute {
   @apply appearance-none w-6 h-6 border-2 border-blue-300 rounded-lg;
   @apply checked:bg-gradient-to-r checked:from-sky-400 checked:to-blue-500;
@@ -238,14 +161,9 @@
   @apply transition-all cursor-pointer;
 }
 
-/* 로딩 스피너 */
 @keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .loading-spinner {
@@ -253,18 +171,6 @@
   animation: spin-slow 1s linear infinite;
 }
 
-/* 툴팁 */
-.tooltip {
-  @apply absolute bg-gradient-to-r from-sky-500 to-indigo-600;
-  @apply text-white text-sm font-semibold px-3 py-2 rounded-xl;
-  @apply opacity-0 pointer-events-none transition-opacity duration-300;
-}
-
-.tooltip-trigger:hover .tooltip {
-  @apply opacity-100;
-}
-
-/* 모바일 최적화 */
 @layer utilities {
   .safe-top {
     padding-top: env(safe-area-inset-top);
