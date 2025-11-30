@@ -30,14 +30,11 @@ export default function Home() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="card-cute p-8 max-w-lg w-full">
         {/* 귀여운 헤더 */}
-        <div className="text-center mb-8">
 <div className="mb-4 flex justify-center">
-  <Image 
+  <img 
     src="/images/dog.png" 
     alt="귀여운 강아지" 
-    width={128}
-    height={128}
-    className="object-contain"
+    className="w-32 h-32 object-contain"
   />
 </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 bg-clip-text text-transparent mb-3">
