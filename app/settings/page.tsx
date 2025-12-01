@@ -1,80 +1,147 @@
 'use client';
 
 import { useState } from 'react';
-import Header from '@/components/Header';
-import { defaultWeights, type Weights } from '@/lib/data';
+import Link from 'next/link';
 
-export default function Settings() {
-  const [weights, setWeights] = useState<Weights>(defaultWeights);
+export default function Home() {
+  const [birthData, setBirthData] = useState({
+    year: '',
+    month: '',
+    day: '',
+    hour: '',
+    minute: ''
+  });
 
-  const handleChange = (key: keyof Weights, value: number) => {
-    setWeights({ ...weights, [key]: value / 100 });
-  };
-
-  const total = Object.values(weights).reduce((a, b) => a + b, 0);
+  const isValid = birthData.year.length === 4 && 
+                  birthData.month.length > 0 && 
+                  birthData.day.length > 0;
 
   return (
-    <div className="min-h-screen bg-slate-900">
-      <Header />
-      
-      <main className="max-w-2xl mx-auto px-4 py-8">
-        <div className="bg-slate-800 rounded-xl p-8">
-          <h2 className="text-2xl font-bold text-white mb-6">운세 비중 설정</h2>
-          
-          <div className="space-y-6">
-            {Object.entries(weights).map(([key, value]) => (
-              <div key={key}>
-                <div className="flex justify-between mb-2">
-                  <label className="text-slate-300">
-                    {key === 'ohasa' ? '오하아사' : key === 'star' ? '별자리' : key === 'saju' ? '사주' : '띠'}
-                  </label>
-                  <span className="text-purple-400 font-bold">{Math.round(value * 100)}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={value * 100}
-                  onChange={(e) => handleChange(key as keyof Weights, Number(e.target.value))}
-                  className="w-full"
-                />
-              </div>
-            ))}
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="card-cute p-8 max-w-md w-full">
+        {/* 귀여운 헤더 */}
+        <div className="text-center mb-8">
+          <div className="text-7xl mb-4 animate-float">🔮</div>
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 bg-clip-text text-transparent mb-3">
+            운칠
+          </h1>
+          <p className="text-gray-600 text-lg font-medium">운칠기삼, 칠할을 채워드려요</p>
+          <div className="flex justify-center gap-3 mt-4">
+            <span className="text-3xl animate-sparkle">✨</span>
+            <span className="text-3xl animate-sparkle" style={{animationDelay: '0.3s'}}>💫</span>
+            <span className="text-3xl animate-sparkle" style={{animationDelay: '0.6s'}}>⭐</span>
           </div>
-
-          <div className="mt-8 p-4 bg-slate-700 rounded-lg">
-            <p className="text-slate-300">
-              합계: <span className={total === 1 ? 'text-green-400' : 'text-red-400'}>
-                {Math.round(total * 100)}%
-              </span>
-            </p>
-          </div>
-
-          <button className="w-full mt-6 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg">
-            저장하기
-          </button>
         </div>
-      </main>
+        
+        {/* 생년월일 입력 */}
+        <div className="mb-6">
+          <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
+            <span className="text-2xl">🎂</span>
+            <span>생년월일</span>
+          </label>
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="1990"
+              maxLength={4}
+              value={birthData.year}
+              onChange={(e) => setBirthData({...birthData, year: e.target.value.replace(/[^0-9]/g, '')})}
+              className="input-cute w-24 text-center font-bold text-lg"
+            />
+            <span className="text-gray-500 font-medium">년</span>
+            <input
+              type="text"
+              placeholder="05"
+              maxLength={2}
+              value={birthData.month}
+              onChange={(e) => {
+                const val = e.target.value.replace(/[^0-9]/g, '');
+                if (val === '' || (parseInt(val) >= 1 && parseInt(val) <= 12)) {
+                  setBirthData({...birthData, month: val});
+                }
+              }}
+              className="input-cute w-20 text-center font-bold text-lg"
+            />
+            <span className="text-gray-500 font-medium">월</span>
+            <input
+              type="text"
+              placeholder="15"
+              maxLength={2}
+              value={birthData.day}
+              onChange={(e) => {
+                const val = e.target.value.replace(/[^0-9]/g, '');
+                if (val === '' || (parseInt(val) >= 1 && parseInt(val) <= 31)) {
+                  setBirthData({...birthData, day: val});
+                }
+              }}
+              className="input-cute w-20 text-center font-bold text-lg"
+            />
+            <span className="text-gray-500 font-medium">일</span>
+          </div>
+        </div>
+
+        {/* 태어난 시간 입력 */}
+        <div className="mb-8">
+          <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
+            <span className="text-2xl">⏰</span>
+            <span>태어난 시간</span>
+          </label>
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="14"
+              maxLength={2}
+              value={birthData.hour}
+              onChange={(e) => {
+                const val = e.target.value.replace(/[^0-9]/g, '');
+                if (val === '' || (parseInt(val) >= 0 && parseInt(val) <= 23)) {
+                  setBirthData({...birthData, hour: val});
+                }
+              }}
+              className="input-cute flex-1 text-center font-bold text-lg bg-sky-50 border-sky-200 focus:border-sky-400"
+            />
+            <span className="text-gray-500 font-medium">시</span>
+            <input
+              type="text"
+              placeholder="30"
+              maxLength={2}
+              value={birthData.minute}
+              onChange={(e) => {
+                const val = e.target.value.replace(/[^0-9]/g, '');
+                if (val === '' || (parseInt(val) >= 0 && parseInt(val) <= 59)) {
+                  setBirthData({...birthData, minute: val});
+                }
+              }}
+              className="input-cute flex-1 text-center font-bold text-lg bg-sky-50 border-sky-200 focus:border-sky-400"
+            />
+            <span className="text-gray-500 font-medium">분</span>
+          </div>
+          <div className="mt-3 p-3 bg-sky-50 rounded-2xl border-2 border-sky-100">
+            <p className="text-xs text-sky-700 font-medium">💡 정확한 사주 분석을 위해 태어난 시간을 입력해주세요</p>
+          </div>
+        </div>
+
+        {/* 귀여운 버튼 */}
+        {isValid ? (
+          <Link href="/dashboard">
+            <button className="btn-cute w-full text-lg">
+              운칠 시작하기 ✨
+            </button>
+          </Link>
+        ) : (
+          <button 
+            disabled
+            className="w-full bg-gray-300 text-gray-500 font-bold py-3 px-6 rounded-full cursor-not-allowed"
+          >
+            생년월일을 입력해주세요
+          </button>
+        )}
+
+        {/* 귀여운 푸터 */}
+        <div className="text-center mt-6">
+          <p className="text-xs text-gray-400">매일 당신의 운을 응원해요 💕</p>
+        </div>
+      </div>
     </div>
   );
 }
-```
-
----
-
-## 🎯 순서
-
-1. **app/dashboard/page.tsx 파일 있는지 확인**
-2. **없으면 만들기**
-3. **app/settings/page.tsx도 확인**
-4. **없으면 만들기**
-5. **Vercel 자동 재배포 대기**
-6. **Visit!**
-
----
-
-**먼저 확인부터!**
-
-app/dashboard/page.tsx 주소 브라우저에 입력해봐:
-```
-https://github.com/102ugoo-glitch/UNCHIL/blob/main/app/dashboard/page.tsx
