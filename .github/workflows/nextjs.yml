@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy Static Site to GitHub Pages
 
 on:
   push:
@@ -17,23 +17,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        
+      # ⚠️ 의존성 설치 및 빌드 단계(Next.js 관련)는 모두 삭제합니다.
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-          
-      - name: Install dependencies
-        run: npm ci
-        
-      - name: Build with Next.js
-        run: npm run build
-        
+      # 1. 아티팩트 업로드: 저장소의 루트(.)에 있는 모든 파일을 아티팩트로 만듭니다.
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out
+          # 순수 정적 파일은 빌드 없이 루트(.) 폴더가 바로 배포 대상이 됩니다.
+          path: '.' 
 
   deploy:
     environment:
