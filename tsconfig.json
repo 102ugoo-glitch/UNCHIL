@@ -17,11 +17,11 @@
       {
         "name": "next"
       }
-    ], // <--- plugins 항목이 마지막이 아니므로 여기에 쉼표가 있어야 합니다.
+    ],
     "paths": {
       "@/*": ["./*"]
-    } // <--- paths가 compilerOptions의 마지막 항목이므로 쉼표가 없어야 합니다.
-  }, // <--- compilerOptions 객체 자체는 파일의 마지막 항목이 아니므로 쉼표가 없어야 합니다.
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"], // <--- include가 마지막이 아니므로 쉼표가 있어야 합니다.
-  "exclude": ["node_modules"] // <--- exclude가 파일의 마지막 항목이므로 쉼표가 없어야 합니다.
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }
